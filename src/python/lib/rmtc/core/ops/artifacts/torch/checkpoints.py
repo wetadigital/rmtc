@@ -50,7 +50,7 @@ class TorchCheckpoint(Checkpoint):
         self._optimizer_state = None
 
     def is_valid(self):
-        return self._model_state is not None and self._optimizer_state is not None
+        return self._model_state is not None and self.torch_optimizer_state is not None
 
     @property
     def torch_weights(self):

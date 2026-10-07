@@ -65,6 +65,7 @@ class Tracking:
         jurisdiction=None,
         party=None,
         tracer=None,
+        asset_manager=None,
         publisher=None,
         watermarkers=None,
         filters=None,
@@ -82,6 +83,8 @@ class Tracking:
             raise RMTCException("Invalid factory - can't init")
 
         # optionals - warn if missing as some functionality will be invalid
+        if asset_manager is None:
+            log.warning("Invalid asset manager")
         if publisher is None:
             log.warning("Invalid publisher")
         if party is None:
@@ -94,6 +97,7 @@ class Tracking:
             log.warning("Invalid filters")
 
         # store
+        self._asset_manager = asset_manager
         self._publisher = publisher
         self._tracer = tracer
         self._store = store
@@ -930,7 +934,7 @@ class Tracking:
             to_publish.add(entity)
 
         # publish them
-        published = self._publisher.publish(list(to_publish), **kwargs)
+        published = self._asset_manager.publish(list(to_publish), **kwargs)
         self.push(published)
         self._log.info(f"Published: {len(published)}")
 

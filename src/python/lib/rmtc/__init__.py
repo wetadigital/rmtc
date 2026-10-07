@@ -206,6 +206,7 @@ class System:
         # Create the tracking subsystem
         self._track = Tracking(
             store=store,
+            asset_manager=asset_manager,
             publisher=publisher,
             watermarkers=watermarkers,
             tracer=tracer,
@@ -706,17 +707,26 @@ class System:
 
         return run
 
-    def read(self, artifacts):
-        return self._ops.asset_manager.read(artifacts)
+    def read(self, artifacts, metadata=None):
+        return self._ops.asset_manager.read(artifacts, metadata=metadata)
 
-    def write(self, artifacts):
-        return self._ops.asset_manager.write(artifacts)
+    def write(self, artifacts, **kwargs):
+        return self._ops.asset_manager.write(artifacts, **kwargs)
 
     def init(self, artifacts):
         return self._ops.asset_manager.init(artifacts)
 
     def reset(self, artifacts):
         return self._ops.asset_manager.reset(artifacts)
+
+    def create_uri(self, artifact, root=None, **kwargs):
+        return self._ops.asset_manager.create_uri(artifact, root=root, **kwargs)
+
+    def identity_mode(self, mode):
+        return self._ops.asset_manager.identity_mode(mode)
+
+    def manage_versions_with_publisher(self, use_for_versioning):
+        return self._ops.asset_manager.manage_versions_with_publisher(use_for_versioning)
 
     def purge(self, solution, category):
         return self._ops.purge(solution, category)

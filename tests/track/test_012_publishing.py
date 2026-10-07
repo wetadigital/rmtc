@@ -18,6 +18,19 @@ class TestPublisher(unittest.TestCase):
         with self.assertRaises(TypeError):
             Publisher()
 
+    def test_get_metadata_default_returns_none_per_uri(self):
+        """
+        get_metadata is a concrete hook, not abstract - a Publisher with no
+        metadata concept (e.g. DiskPublisher) needs no override to satisfy
+        the interface, and callers get None rather than a missing method.
+        """
+        publisher = DiskPublisher(log=Mock())
+        self.assertEqual(publisher.get_metadata(["a", "b", "c"]), [None, None, None])
+
+    def test_get_metadata_default_handles_empty_list(self):
+        publisher = DiskPublisher(log=Mock())
+        self.assertEqual(publisher.get_metadata([]), [])
+
 
 class TestDiskPublisher(unittest.TestCase):
 

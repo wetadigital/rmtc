@@ -45,8 +45,9 @@ class BaseReaderWriter(ABC):
         pass
 
     @abstractmethod
-    def read(self, artifacts: list[Artifact]) -> bool:
-        """Read in all the artifacts"""
+    def read(self, artifacts: list[Artifact], metadata: dict = None) -> bool:
+        """Read in all the artifacts. If `metadata` is a dict, populate it in
+        place with per-artifact publisher metadata, keyed by obj_id."""
         pass
 
     @abstractmethod
@@ -133,8 +134,12 @@ class ReaderWriter(BaseReaderWriter):
             if not artifact.is_valid():
                 raise RMTCException(f"Invalid {artifact}")
 
-    def read(self, artifacts):
-        """Read in all the artifacts"""
+    def read(self, artifacts, metadata=None):
+        """
+        Read in all the artifacts. If metadata is a dict, it is populated
+        in place with per-artifact metadata stored on the publisher, keyed by
+        the artifact's object id.
+        """
 
         if not isinstance(artifacts, list):
             raise RMTCException("Require list of artifacts to read")
@@ -146,6 +151,9 @@ class ReaderWriter(BaseReaderWriter):
                 raise RMTCException(
                     f"Object {artifact} is not Artifact ({artifact.__class__})"
                 )
+
+            if metadata is not None:
+                metadata[artifact.obj_id] = self._publisher.get_metadata([artifact.uri])[0]
 
             # already read
             if artifact.is_valid():
@@ -313,16 +321,26 @@ class AssetManager:
     def is_supported(self, artifact):
         return self._readerwriter.is_uri_supported(artifact.uri)
 
-    def create_uri(self, artifact, root):
+    def create_uri(self, artifact, root=None, **kwargs):
         return self._readerwriter.create_uri(artifact, root)
+
+    def identity_mode(self, mode):
+        return self._readerwriter.set_identity_mode(mode)
+
+    def manage_versions_with_publisher(self, use_for_versioning):
+        if not hasattr(self._publisher, "manage_versions"):
+            raise RMTCException(
+                f"Publisher '{self._publisher}' does not support manage_versions()"
+            )
+        return self._publisher.manage_versions(use_for_versioning)
 
     def init(self, artifacts):
         return self._readerwriter.init(artifacts)
 
-    def read(self, artifacts: list[Artifact]) -> bool:
-        return self._readerwriter.read(artifacts)
+    def read(self, artifacts: list[Artifact], metadata: dict = None) -> bool:
+        return self._readerwriter.read(artifacts, metadata=metadata)
 
-    def write(self, artifacts: list[Artifact]) -> bool:
+    def write(self, artifacts: list[Artifact], **kwargs) -> bool:
         return self._readerwriter.write(artifacts)
 
     def reset(self, artifacts: list[Artifact]) -> bool:

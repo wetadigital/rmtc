@@ -54,7 +54,7 @@ class TorchCheckpointFile(IO):
             device = "cpu"
 
         checkpoint = artifact
-        if checkpoint.uri.path.exists():
+        if uri.path.exists():
             checkpoint_state = torch.load(
                 str(uri.path), weights_only=True, map_location=device
             )
@@ -73,9 +73,9 @@ class TorchCheckpointFile(IO):
                 )
 
             checkpoint.epoch = checkpoint_state["epoch"]
-            checkpoint.optimizer_name = checkpoint_state["optimizer_name"]
+            checkpoint.optimizer = checkpoint_state["optimizer_name"]
             checkpoint.torch_weights = checkpoint_state["model_state"]
-            checkpoint.torch_optimizer = checkpoint_state["optimizer_state"]
+            checkpoint.torch_optimizer_state = checkpoint_state["optimizer_state"]
             checkpoint.metric = checkpoint_state["metric"]
 
     def write(self, uri, artifact, asset_manager):
@@ -88,9 +88,9 @@ class TorchCheckpointFile(IO):
         checkpoint = artifact
         checkpoint_state = {
             "epoch": checkpoint.epoch,
-            "optimizer_name": checkpoint.optimizer_name,
+            "optimizer_name": checkpoint.optimizer,
             "model_state": checkpoint.torch_weights,
-            "optimizer_state": checkpoint.torch_optimizer,
+            "optimizer_state": checkpoint.torch_optimizer_state,
             "metric": checkpoint.metric,
         }
         torch.save(checkpoint_state, str(uri.path))

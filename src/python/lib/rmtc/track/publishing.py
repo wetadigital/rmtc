@@ -14,6 +14,12 @@ class Publisher(ABC):
     def resolve_inverse(self, uris):
         pass
 
+    def get_metadata(self, uris):
+        """
+        Return extra metadata stored on the publisher for each URI.
+        """
+        return [None for _ in uris]
+
     @abstractmethod
     def publish(self, entities, **kwargs):
         """
