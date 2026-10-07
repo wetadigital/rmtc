@@ -2,11 +2,11 @@
 # Copyright Contributors to the RMTC Project
 
 import unittest
+import uuid
 
-from rmtc_core import System
+from rmtc import System
 from rmtc.system import Config
-from rmtc.objects import Object
-
+from rmtc.system.objects import Object
 from rmtc.system import Logger
 
 
@@ -16,16 +16,15 @@ class AbstractRMTCTest(unittest.TestCase):
     def __init__(self, methodName="runTest"):
         super(AbstractRMTCTest, self).__init__(methodName)
 
-        # Override the name to testing
+        # Override the name to a unique store so we can
+        # run multiple testing sessions concurrently
         self._overrides = {
             "rmtc_store": {
-                "name": "rmtc_test",
-            },
-            "rmtc_system": {
-                "mode": "TESTING",
+                "name": f"rmtc_test_{str(uuid.uuid4())}",
             },
         }
         self.config = Config(
+            name="test",
             overrides=self._overrides,
         )
 
@@ -48,18 +47,21 @@ class AbstractRMTCTest(unittest.TestCase):
         """Delete the test graph"""
         self.get_system().delete_all()
 
-    def get_system(self):
+    def get_system(self, **kwargs): # add all system args here
         """Get an instance of the RMTC System."""
         rmtc_sys = System(
             config=self.config,
+            **kwargs,
         )
         return rmtc_sys
 
     def acquire_lock(self):
-        self._db_connection = self.get_system().open()
-        self._db_connection.lock(timeout=self._lock_timeout)
+        # self._db_connection = self.get_system().open()
+        # self._db_connection.lock(timeout=self._lock_timeout)
+        pass
 
     def release_lock(self):
-        self._db_connection.unlock()
-        self._db_connection.close()
-        self._db_connection = None
+        # self._db_connection.unlock()
+        # self._db_connection.close()
+        # self._db_connection = None
+        pass        

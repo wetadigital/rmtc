@@ -1,0 +1,157 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright Contributors to the RMTC Project
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMTC: Technical Details</title>
+<meta name="description" content="RMTC's layered architecture: System foundation, provenance graph, operations pipeline, GUI tools, and graph database backend.">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/svg+xml" href="images/rmtc_logo.svg">
+</head>
+<body class="architecture-page">
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="mark"><img src="images/rmtc_logo.svg" alt="RMTC logo"></span>
+      RMTC
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Overview</a>
+      <a href="features.html">Features</a>
+      <strong>Architecture</strong>
+      <a href="future.html">Future</a>
+    </div>
+    <a class="nav-cta" href="https://github.com/AcademySoftwareFoundation/rmtc">GitHub ↗</a>
+  </div>
+</nav>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Architecture</div>
+      <h1 style="font-size: 2.4rem;">How RMTC Is Built</h1>
+      <p>A clean layered Python & C++ architecture designed for extensibility, facility pick-and-mix adoption, and provenance-first operations.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div style="max-width: 880px; margin: 0 auto;">
+
+      <div style="background: linear-gradient(135deg, rgba(79, 214, 192, 0.10), rgba(242, 161, 84, 0.08)); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; margin-bottom: 48px;">
+        <h2 style="margin: 0 0 28px;">Layered Design</h2>
+
+        <div style="space-y: 24px;">
+          <div style="margin-bottom: 32px;">
+            <div style="color: var(--accent); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Layer 5: Frontends & Tools</div>
+            <h3 style="margin: 0 0 8px; font-size: 1.1rem;">User Interfaces</h3>
+            <p style="color: var(--text-dim); margin: 0; font-size: 0.95rem;">Qt-based GUIs for ingestion, tracking & inference, Flask REST API (WIP) for remote access, and DCC plugins for Nuke and other production tools.</p>
+          </div>
+
+          <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-bottom: 32px;">
+            <div style="color: var(--accent); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Layer 4: Operations Pipeline</div>
+            <h3 style="margin: 0 0 8px; font-size: 1.1rem;">Ops, Training, Inference &amp; I/O</h3>
+            <p style="color: var(--text-dim); margin: 0; font-size: 0.95rem;">Training subsystem (PyTorch trainers, pluggable schedulers), inference engines, process stacks for invertible tensor transformations (color, channels, spatial), and pluggable I/O adapters for EXR, ONNX, USD, and other formats. Builders convert models to DCC-native formats (e.g., Nuke CAT).</p>
+          </div>
+
+          <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-bottom: 32px;">
+            <div style="color: var(--accent); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Layer 3: Provenance &amp; Entities</div>
+            <h3 style="margin: 0 0 8px; font-size: 1.1rem;">Track Module &amp; Graph Store</h3>
+            <p style="color: var(--text-dim); margin: 0; font-size: 0.95rem;">First-class entities: Models, Weights, Datasets, Checkpoints, Runs, Inferences, Solutions, and Licenses. All artifacts are configurable to be immutable; relationships form a directed provenance graph. The Store abstraction plugs in Apache AGE (PostgreSQL), Neo4j, or other backends. Lazy loading and just-in-time sync minimize database round trips.</p>
+          </div>
+
+          <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-bottom: 32px;">
+            <div style="color: var(--accent); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Layer 2: System Foundation</div>
+            <h3 style="margin: 0 0 8px; font-size: 1.1rem;">Type Registration, Properties &amp; Config</h3>
+            <p style="color: var(--text-dim); margin: 0; font-size: 0.95rem;">Factory system for dynamic instantiation of RMTC classes via fully qualified type names (e.g., rmtc.core.model.TorchModel-1.0.0). YAML-driven module registration with whitelisting. Base Object and Property classes providing type-safe attribute storage with visibility, ownership, and provenance direction tracking. Config manages database credentials and system settings.</p>
+          </div>
+
+          <div style="border-top: 1px solid var(--border); padding-top: 24px;">
+            <div style="color: var(--accent); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Layer 1: Graph Database</div>
+            <h3 style="margin: 0 0 8px; font-size: 1.1rem;">Pluggable Storage Backend</h3>
+            <p style="color: var(--text-dim); margin: 0; font-size: 0.95rem;">Apache AGE (PostgreSQL extension) is the reference implementation; Neo4j and JSON file stores are also supported. All backends expose the same abstract Connection and Queries interfaces, so facilities can swap backends without touching application code.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-media" style="margin-bottom: 48px;">
+        <img src="images/schema.png" alt="RMTC provenance graph schema showing entities and relationships">
+      </div>
+
+      <h2 style="margin: 0 0 24px;">Design Principles</h2>
+
+      <div class="grid" style="grid-template-columns: 1fr; gap: 20px; margin-bottom: 32px;">
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Abstraction &amp; Injection</h3>
+          <p style="margin: 0; color: var(--text-dim);">Classes accept injected dependencies (trainers, schedulers, I/O implementations, asset managers) rather than hard-coding concrete implementations. The Factory resolves type names at runtime, so facilities tailor RMTC to their infrastructure without code changes.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Immutability</h3>
+          <p style="margin: 0; color: var(--text-dim);">Artifacts are ideally considered immutable once created. Updates happen via variants (format equivalents) or new artifacts only. This is intended to keep the recorded provenance chain from being silently rewritten, supporting — but not on its own constituting — audit and compliance review. Though as with all VFX workflows, there is flexibility to adapt this workflow.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Lazy Loading &amp; JIT Sync</h3>
+          <p style="margin: 0; color: var(--text-dim);">Entities fetch only light representations initially; full properties load on first access. This minimizes database round trips and supports efficiently working with millions of artifacts in the graph.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Pick-and-Mix Adoption</h3>
+          <p style="margin: 0; color: var(--text-dim);">Facilities can adopt the tracking layer alone to wrap their existing training &amp; inference pipelines, or go full-stack and use the provided operations infrastructure. Every component is designed as an independent, pluggable subsystem.</p>
+        </div>
+      </div>
+
+      <h2 style="margin: 0 0 24px;">Technology Stack</h2>
+
+      <div class="feature-media" style="margin-bottom: 28px;">
+        <img src="images/stack.png" alt="RMTC technology stack diagram">
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">ML/AI</h3>
+          <p style="margin: 0; color: var(--text-dim); font-size: 0.9rem;">Python, PyTorch, Apache AGE, Neo4j, Tensorboard, ONNX</p>
+        </div>
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">VFX Formats</h3>
+          <p style="margin: 0; color: var(--text-dim); font-size: 0.9rem;">EXR, USD, Skeletons &amp; Animation (WIP), Point clouds (WIP), Meshes (WIP)</p>
+        </div>
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Interfaces</h3>
+          <p style="margin: 0; color: var(--text-dim); font-size: 0.9rem;">API, Qt GUI, C++ (WIP)</p>
+        </div>
+        <div class="card">
+          <h3 style="margin: 0 0 8px;">Remote Access (WIP)</h3>
+          <p style="margin: 0; color: var(--text-dim); font-size: 0.9rem;">Flask REST API & WebSocket support proposed</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <h2>Built from the Ground Up for Provenance</h2>
+    <p>Every layer of RMTC is designed for tracking, extensibility, and facility-scale deployment.</p>
+    <div class="cta-row" style="justify-content:center;">
+      <a class="btn btn-primary" href="https://github.com/AcademySoftwareFoundation/rmtc">Get involved</a>
+      <a class="btn btn-secondary" href="https://academysoftwarefdn.slack.com/archives/C09FP5KUUP4">Join the conversation</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© Contributors to the RMTC Project</span>
+    <span><a href="https://github.com/AcademySoftwareFoundation/rmtc/blob/main/LICENSE">Licensed under Apache-2.0</a></span>
+    <span class="disclaimer">All output from RMTC is indicative only, requiring independent verification. It does not constitute a legal guarantee of provenance, licensing status, compliance nor any other protection — no guarantees of any kind are made or implied.</span>
+  </div>
+</footer>
+
+</body>
+</html>
