@@ -65,12 +65,6 @@ class System:
         except:  # pylint: disable=bare-except
             self._version = Version("0.0.0")
 
-        # Get password and username for env if not passed in
-        if credentials is None:
-            credentials = (os.getenv("RMTC_USER"), os.getenv("RMTC_PW"))
-        if credentials[0] is None or credentials[1] is None:
-            raise RMTCException("No credentials")
-
         # Create a config
         config = config or Config()
         self._config = config
@@ -97,6 +91,13 @@ class System:
         system_config = config["rmtc_system"]
         if system_config:
             self._mode = Mode[system_config["mode"]]
+
+        # Get password and username for env if not passed in
+        if credentials is None:
+            credentials = (os.getenv("RMTC_USER"), os.getenv("RMTC_PW"))
+        if credentials[0] is None or credentials[1] is None:
+            raise RMTCException("No credentials")
+        log.debug(f"Using credentials {credentials}")
 
         # JIT sync
         if jit is None and config["rmtc_jit"]:

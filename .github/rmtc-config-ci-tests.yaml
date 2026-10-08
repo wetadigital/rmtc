@@ -14,7 +14,8 @@ rmtc_system:
 rmtc_store:
   type_name:    rmtc_core.Store.AGE-1.0.0
   uri:          postgres://localhost:5432
-  name:         postgresDB
+  name:         test
+  db_name:      postgresDB
   immutable:    false
   limit:        25
   timeout:      6000
@@ -25,7 +26,7 @@ rmtc_tracker:
 
 rmtc_log:
   type_name:    rmtc_sys.Logger.Logger-1.0.0
-  level:        INFO
+  level:        DEBUG
 
 rmtc_asset_manager:
   type_name:    rmtc_ops.AssetManager.AssetManager-1.0.0

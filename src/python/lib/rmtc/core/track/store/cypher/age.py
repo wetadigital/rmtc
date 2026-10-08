@@ -173,7 +173,7 @@ class AGEDatabase(Store):
     def __init__(
         self,
         name="rmtc",
-        db_name="postgres",
+        db_name=None,
         factory=None,
         immutable=True,
         uri=None,
