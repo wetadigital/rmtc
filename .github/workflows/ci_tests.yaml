@@ -20,8 +20,8 @@ jobs:
       RMTC_CONFIGS: .github/rmtc-config-ci-tests.yaml
       RMTC_MODULES: res/modules
       RMTC_RESOURCES: res
-      RMTC_USER: ${{ secrets.RMTC_TEST_USER }}
-      RMTC_PW: ${{ secrets.RMTC_TEST_PW }}
+      RMTC_USER: postgres
+      RMTC_PW: postgres
       QT_QPA_PLATFORM: offscreen
 
     strategy:
