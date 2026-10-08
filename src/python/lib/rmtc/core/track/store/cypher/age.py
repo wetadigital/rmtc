@@ -57,7 +57,7 @@ class AGEConnection(CypherConnection):
         # build AGE query - SELECT * FROM cypher('graph', $$ $$) AS (result agtype)
         params = ", $1" if kwargs else ""
         age_query = (
-            f"SELECT * FROM cypher('{self.store.db_name}', $$\n{query}\n$${params})"
+            f"SELECT * FROM cypher('{self.store.name}', $$\n{query}\n$${params})"
         )
         if len(keys) > 0:
             columns = " agtype, ".join(keys) + " agtype"

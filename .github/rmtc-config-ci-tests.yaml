@@ -26,7 +26,7 @@ rmtc_tracker:
 
 rmtc_log:
   type_name:    rmtc_sys.Logger.Logger-1.0.0
-  level:        DEBUG
+  level:        INFO
 
 rmtc_asset_manager:
   type_name:    rmtc_ops.AssetManager.AssetManager-1.0.0
