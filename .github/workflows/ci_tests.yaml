@@ -17,9 +17,10 @@ jobs:
     name: "Tests"
     runs-on: ubuntu-22.04
     env:
-      RMTC_CONFIG: .github/rmtc-config-ci-tests.yaml
+      RMTC_CONFIGS: .github/rmtc-config-ci-tests.yaml
       RMTC_MODULES: res/modules
       RMTC_RESOURCES: res
+      QT_QPA_PLATFORM: offscreen
 
     strategy:
       fail-fast: false
@@ -68,15 +69,15 @@ jobs:
 
       - name: Run system tests
         run: |
-          uv run pytest tests/system/          
+          uv run pytest tests/system/
           
       - name: Run track tests
         run: |
-          uv run pytest tests/track/    
+          uv run pytest tests/track/
 
       - name: Run ops tests
         run: |
-          uv run pytest tests/ops/ --ignore=tests/integration/test_200_mnist_refine_model.py
+          uv run pytest tests/ops/
       
       - name: Run gui tests
         run: |

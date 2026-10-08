@@ -3,7 +3,7 @@
 
 # TODO : setup build system here to work with CMake to build possible C++
 [build-system]
-requires = ["setuptools>=69.0", "wheel", "setuptools-scm>=8"]
+requires = ["setuptools>=83", "wheel", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]

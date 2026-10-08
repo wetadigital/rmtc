@@ -718,6 +718,8 @@ class Config:
         # If config path is not provided, load from the environment
         if config_file is None:
             env_var_path = os.environ.get(self.CONFIG_PATH_ENV_VAR, None)
+            if env_var_path is None:
+                return None
             env_paths = env_var_path.split(":")
             for env_path in env_paths:
                 config_file = self._find_config_file(env_path, name=name)
