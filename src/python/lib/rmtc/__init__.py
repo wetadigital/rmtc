@@ -726,7 +726,9 @@ class System:
         return self._ops.asset_manager.identity_mode(mode)
 
     def manage_versions_with_publisher(self, use_for_versioning):
-        return self._ops.asset_manager.manage_versions_with_publisher(use_for_versioning)
+        return self._ops.asset_manager.manage_versions_with_publisher(
+            use_for_versioning
+        )
 
     def purge(self, solution, category):
         return self._ops.purge(solution, category)

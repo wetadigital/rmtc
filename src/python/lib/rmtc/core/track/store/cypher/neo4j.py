@@ -33,7 +33,7 @@ class Neo4jConnection(CypherConnection):
         )
         self._connection = neo4j_connection
 
-    def lock(self, _timeout):
+    def lock(self, timeout=60000):
         raise NotImplementedError()
 
     def unlock(self):

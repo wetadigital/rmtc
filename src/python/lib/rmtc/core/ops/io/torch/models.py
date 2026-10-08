@@ -225,7 +225,7 @@ class TorchScript(IO):
             model = model.to("cuda")
             model.eval()
             with torch.no_grad():
-                if self.trace:
+                if self.trace:  # pylint: disable=using-constant-test
                     test_input = artifact.create_inputs()
                     model = torch.jit.trace(model, test_input)
                 else:

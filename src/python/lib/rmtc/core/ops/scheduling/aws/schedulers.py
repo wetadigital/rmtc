@@ -63,6 +63,6 @@ class AWSExecutor(Executor):
             job=job,
         )
 
-    def __call__(self):
+    def __call__(self, tracker, task):
         """Execute task on AWS infrastructure (placeholder implementation)."""
         pass

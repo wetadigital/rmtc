@@ -153,7 +153,9 @@ class ReaderWriter(BaseReaderWriter):
                 )
 
             if metadata is not None:
-                metadata[artifact.obj_id] = self._publisher.get_metadata([artifact.uri])[0]
+                metadata[artifact.obj_id] = self._publisher.get_metadata(
+                    [artifact.uri]
+                )[0]
 
             # already read
             if artifact.is_valid():

@@ -18,7 +18,7 @@ class SafetensorsWeightsBuilder(Builder):
             return False
         return True
 
-    def __call__(self, asset_manager, artifact):
+    def __call__(self, asset_manager, artifact, options=None):
 
         weights = artifact
 

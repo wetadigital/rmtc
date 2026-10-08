@@ -177,7 +177,7 @@ class FunctionExecutor(Executor):
         self._args = []
         self._kwargs = {}
 
-    def __call__(self):
+    def __call__(self, tracker, task):
         """Execute the stored function with bound arguments."""
         if self._func is None:
             raise RuntimeError("Executor has no executable")
