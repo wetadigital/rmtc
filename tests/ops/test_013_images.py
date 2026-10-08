@@ -61,11 +61,12 @@ class TestImages(AbstractRMTCTest):
         img_count = 0
         for row in dataset:
             self.assertEqual(len(row), 1)
-            rmtc_sys.ops.asset_manager.read(row)      
+            rmtc_sys.ops.asset_manager.read(row)
             img = row[0]
             self.assertEqual(img.layer_name, "rgb")
             self.assertEqual(img.data_type, DataType.FLOAT32)
-            self.assertEqual(img.colorspace, "sRGB")
+            # later versions of OIIO use interop ID strings
+            self.assertTrue(img.colorspace in ("sRGB", "srgb_rec709_scene"))
             img_count += 1
         self.assertTrue(img_count > 0)
 
